@@ -29,18 +29,29 @@ const BASE_URL = 'https://us1.locationiq.com/v1/search';
 // the Great Wall of China. We'll use this to form the basis of our
 // solutions.
 
-axios.get(BASE_URL, {
-  params: {
-    key: API_KEY,
-    q: placeName,
-    format: 'json',
-  },
-})
-  .then(response => {
-    const { lat, lon } = response.data[0];
-    console.log({ lat, lon });
-    return;  // as configured, eslint requires a return statement
+const getLatLonForPlace = (place) => {
+  return axios.get(BASE_URL, {
+    params: {
+      key: API_KEY,
+      q: place,
+      format: 'json',
+    },
   })
-  .catch(error => {
-    console.log(error);
-  });
+    .then(response => {
+      const { lat, lon } = response.data[0];
+      return { latitude: lat, longitude: lon };
+    });
+};
+
+const main = () => {
+  return getLatLonForPlace(placeName)
+    .then(result => {
+      console.log(result);
+      return;  // as configured, eslint requires a return statement
+    })
+    .catch(error => {
+      console.log(error);
+    });
+};
+
+main();
